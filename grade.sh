@@ -13,7 +13,7 @@ then
 else
     echo 'Repository not found!'
     echo ''
-    echo 'FAIL'
+    echo 'SCORE: 0/8'
     exit
 fi
 
@@ -23,7 +23,7 @@ then
 else
     echo 'File not found!'
     echo ''
-    echo 'FAIL'
+    echo 'SCORE: 0/8'
     exit
 fi
 
@@ -40,7 +40,7 @@ then
 else
     echo 'Unable to compile!'
     echo ''
-    echo 'FAIL'
+    echo 'SCORE: 0/8'
     exit
 fi
 
@@ -50,7 +50,7 @@ if [[ $? -eq 0 ]];
 then
     echo 'All tests passed'
     echo ''
-    echo 'PASS'
+    echo 'SCORE: 8/8'
     exit
 fi
 
@@ -60,7 +60,16 @@ fi
 
 # Then, add here code to compile and run, and do any post-processing of the
 # tests
+RESULT_SUMMARY=$(tail -n 2 output.txt | head -n 1)
+echo "$RESULT_SUMMARY"
 
-tail -n 2 output.txt | head -n 1
 echo ''
-echo 'FAIL'
+
+echo 'Failed Tests:'
+grep -E '^[0-9]\).+\(' output.txt 
+
+echo ''
+
+NUM_ERRORS=$(echo $RESULT_SUMMARY | grep -o -E '[0-7]')
+SCORE=$(( 8 - $NUM_ERRORS ))
+echo "SCORE: $SCORE/8"
